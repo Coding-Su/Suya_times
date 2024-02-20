@@ -13,6 +13,7 @@ const getLatestNews = async () => {
   // render();
   console.log("aaa", response);
   console.log("bbb", data);  
+  console.log("ccc", newsList);
 };
 
 // const render = () => {
