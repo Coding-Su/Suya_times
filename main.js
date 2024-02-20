@@ -1,10 +1,11 @@
 const API_KEY = `c375da4c79ce4d048504e2b8163088ef`
 const url1 = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
 const url2 = `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`;
+const url3 = `https://suya-times.netlify.app/top-headlines`;
 let newsList = [];
 
 const getLatestNews = async () => {
-  const url = new URL(url2);
+  const url = new URL(url3);
   console.log("uuu:, url")
 
   const response = await fetch(url);
