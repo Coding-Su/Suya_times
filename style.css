@@ -54,6 +54,10 @@
   background-color: rgb(140, 192, 194);
 }
 
+.search-button:active {
+  background-color: blue;
+}
+
 .fa-bars {
   padding: 10px;
 }
