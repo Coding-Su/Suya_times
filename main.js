@@ -4,6 +4,23 @@ const url2 = `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk
 const url3 = `https://suya-times.netlify.app/top-headlines`;
 let newsList = [];
 
+const openNav = () => {
+  document.getElementById("mySidenav").style.width = "250px";
+};
+
+const closeNav = () => {
+  document.getElementById("mySidenav").style.width = "0";
+};
+
+const openSearchBox = () => {
+  let inputArea = document.getElementById("input-area");
+  if (inputArea.style.display === "inline") {
+    inputArea.style.display = "none";
+  } else {
+    inputArea.style.display = "inline";
+  }
+};
+
 const getLatestNews = async () => {
   const url = new URL(url3);
   // console.log("uuu:, url")

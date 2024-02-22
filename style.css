@@ -6,24 +6,31 @@
 
 .head-line svg{
   width: 430px;
+  margin-bottom: 15px;
 }
 
-.menus {
+/* .menu {
   margin-top: 1em;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   border-top: 1px solid #ebebeb;
   border-bottom: 4px double black;
+} */
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.menus button {
+.menu button {
   border: none;
   background: none;
   margin: 5px;
 }
 
-.menus button:hover {
+.menu button:hover {
   background-color: beige;
 }
 
@@ -34,4 +41,62 @@
 
 .news {
   border-bottom: 2px solid black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.side-Nav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: burlywood;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.search-button {
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20%;
+  background-color: rgb(140, 192, 194);
+}
+
+.fa-bars {
+  padding: 10px;
+}
+
+.fa-search {
+  margin-right: 20px;
+}
+
+#input-area {
+  position: relative;
+  right: 15px;
+}
+
+.menu button {
+  border: none;
+  background: none;
+  margin: 5px;
+  width: 120px;
+}
+
+.side-Nav .close-btn {
+  position: absolute;
+  border: none;
+  background: none;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sub-var {
+  display: flex;
+  justify-content: space-between;
 }
