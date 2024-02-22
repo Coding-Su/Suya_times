@@ -31,7 +31,7 @@ const getLatestNews = async () => {
   render();
   // console.log("aaa", response);
   // console.log("bbb", data);  
-  console.log("ccc", newsList);
+  // console.log("ccc", newsList);
 };
 
 const validateImageUrl = (imageUrl) => {
@@ -51,25 +51,28 @@ const render = () => {
     const image = new Image();
     // src속성 할당 (render함수에서 가져온 url)
     image.src = imageUrl;
+    // console.log(image.src);
     // 1. src속성이 할당되었기에 image.complete로 이미지 로딩되었는지 체크
     // 2. 이미지의 가로 세로폭이 0보다 큰지 체크 (크면 이미지가 로딩되었다고 판단)
     // 하나라도 만족하면 true, 둘다 만족하지못하면 false값 반환
+    // console.log("validateImageUrl", image.complete, "/", (image.width + image.height) > 0);
     return image.complete || (image.width + image.height) > 0;
   }; 
 
   const newsHTML = newsList.map(
     (news) => {
       // null값 체크  
-      const imageUrl = news.urlToImage ? news.urlToImage :
-      '/images/noImg.jpg';
+      let imageUrl = news.urlToImage ? news.urlToImage : '/images/noImg.jpg';
       // url 유효성 체크(true or false값 들어감)
       const validateImage = validateImageUrl(imageUrl);
-      
+      if (!validateImage) {
+        imageUrl = '/images/noImg.jpg';
+      }
       // validatedImage가 true이면 imageUrl
       // false이면 noImage
       return`<div class="row news">
     <div class="col-lg-4">
-      <img class="news-img-size" src= ${news.urlToImage}
+      <img class="news-img-size" src= ${imageUrl}
       />
     </div>    
     <div class="col-lg-8">
@@ -92,10 +95,9 @@ const render = () => {
       </div>      
     </div>
   </div>`
-    }).join('');
-      
+    }).join('');      
   
-  console.log("html", newsHTML); 
+  // console.log("html", newsHTML); 
 
   document.getElementById("news-board").innerHTML = newsHTML
 }
