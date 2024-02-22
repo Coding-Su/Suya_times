@@ -9,20 +9,16 @@
   margin-bottom: 15px;
 }
 
-/* .menu {
+.menu {
   margin-top: 1em;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   border-top: 1px solid #ebebeb;
   border-bottom: 4px double black;
-} */
-
-.menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
+
+
 
 .menu button {
   border: none;
@@ -32,6 +28,7 @@
 
 .menu button:hover {
   background-color: beige;
+  border-radius: 3px;
 }
 
 .news-img-size {
@@ -99,4 +96,12 @@
 .sub-var {
   display: flex;
   justify-content: space-between;
+}
+
+@media screen and (max-width:48rem) {
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
