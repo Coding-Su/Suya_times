@@ -95,6 +95,12 @@
   display: none;
 }
 
+.alert-danger {
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
 @media screen and (max-width:48rem) {
   .menu {
     display: flex;

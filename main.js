@@ -5,6 +5,27 @@ const url3 = `https://suya-times.netlify.app/top-headlines`;
 let newsList = [];
 const menus = document.querySelectorAll(".menu button");
 
+let url = new URL(url3);
+
+const getNews = async () => {
+  try {
+    const response = await fetch(url);    
+    const data = await response.json();
+    if(response.status === 200) {
+      if(data.articles.length === 0) {
+        throw new Error("No matches for your search");
+      }
+      newsList = data.articles;
+      render();
+    } else {
+        throw new Error(data.message);
+    }
+    
+  } catch(error) {    
+    errorRender(error.message);
+  }  
+};
+
 menus.forEach((menu) => 
   menu.addEventListener("click", (event) => getNewsByCategory(event))
 );
@@ -33,29 +54,17 @@ const openSearchBox = () => {
 };
 
 const getLatestNews = async () => {
-  const url = new URL(url3);
-  // console.log("uuu:, url")
-
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
-  // console.log("aaa", response);
-  // console.log("bbb", data);  
-  // console.log("ccc", newsList);
+  url = new URL(url3);  
+  getNews();  
 };
 
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   // console.log("category", category);
-  const url = new URL(
+  url = new URL(
     `https://suya-times.netlify.app/top-headlines?category=${category}`
   );
-  const response = await fetch(url);
-  const data = await response.json();  
-  // console.log("Ddd", data);
-  newsList = data.articles;
-  render();
+  getNews();
 };
 
 const getNewsByKeyword = async (event) => {
@@ -67,13 +76,10 @@ const getNewsByKeyword = async (event) => {
   
   // console.log(event.target.previousElementSibling.value);
   const keyword = event.target.previousElementSibling.value;
-  const url = new URL(
+  url = new URL(
     `https://suya-times.netlify.app/top-headlines?q=${keyword}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render()
+  getNews();
 }
 
 
@@ -143,6 +149,13 @@ const render = () => {
   // console.log("html", newsHTML); 
 
   document.getElementById("news-board").innerHTML = newsHTML
+}
+
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+    ${errorMessage}</div>`
+
+    document.getElementById("news-board").innerHTML = errorHTML;
 }
 
 getLatestNews();
