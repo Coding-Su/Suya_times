@@ -7,16 +7,28 @@ const menus = document.querySelectorAll(".menu button");
 
 let url = new URL(url3);
 
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
+
 const getNews = async () => {
   try {
-    const response = await fetch(url);    
+    url.searchParams.set("page",page);  // => &page = page
+    url.searchParams.set("pageSize", pageSize);
+
+    const response = await fetch(url);   
+
     const data = await response.json();
     if(response.status === 200) {
       if(data.articles.length === 0) {
         throw new Error("No matches for your search");
       }
       newsList = data.articles;
+      totalResults = data.totalResults;
+    
       render();
+      paginationRender();
     } else {
         throw new Error(data.message);
     }
@@ -74,7 +86,6 @@ const getNewsByKeyword = async (event) => {
   //   const keyword = keywordEl;
   // };
   
-  // console.log(event.target.previousElementSibling.value);
   const keyword = event.target.previousElementSibling.value;
   url = new URL(
     `https://suya-times.netlify.app/top-headlines?q=${keyword}`
@@ -83,63 +94,52 @@ const getNewsByKeyword = async (event) => {
 }
 
 
-const validateImageUrl = (imageUrl) => {
-    // image객체 생성. 자바스크립트가 가지고 있는 인스턴스
-    const image = new Image();
-    // src속성 할당 (render함수에서 가져온 url)
-    image.src = imageUrl;
-    // 1. src속성이 할당되었기에 image.complete로 이미지 로딩되었는지 체크
-    // 2. 이미지의 가로 세로폭이 0보다 큰지 체크 (크면 이미지가 로딩되었다고 판단)
-    // 하나라도 만족하면 true, 둘다 만족하지못하면 false값 반환
-    return image.complete || (image.width + image.height) > 0;
-  }; 
+// const validateImageUrl = (imageUrl) => {
+    
+//     const image = new Image();
+    
+//     image.src = imageUrl;
+    
+//     return image.complete || (image.width + image.height) > 0;
+//   }; 
 
 const render = () => {
-  const validateImageUrl = (imageUrl) => {
-    // image객체 생성. 자바스크립트가 가지고 있는 인스턴스
-    const image = new Image();
-    // src속성 할당 (render함수에서 가져온 url)
-    image.src = imageUrl;
-    // console.log(image.src);
-    // 1. src속성이 할당되었기에 image.complete로 이미지 로딩되었는지 체크
-    // 2. 이미지의 가로 세로폭이 0보다 큰지 체크 (크면 이미지가 로딩되었다고 판단)
-    // 하나라도 만족하면 true, 둘다 만족하지못하면 false값 반환
-    // console.log("validateImageUrl", image.complete, "/", (image.width + image.height) > 0);
-    return image.complete || (image.width + image.height) > 0;
-  }; 
 
   const newsHTML = newsList.map(
     (news) => {
-      // null값 체크  
-      let imageUrl = news.urlToImage ? news.urlToImage : '/images/noImg.jpg';
-      // url 유효성 체크(true or false값 들어감)
-      const validateImage = validateImageUrl(imageUrl);
-      if (!validateImage) {
-        imageUrl = '/images/noImg.jpg';
-      }
-      // validatedImage가 true이면 imageUrl
-      // false이면 noImage
+        
+      // let imageUrl = 
+            
+      // const image = new Image();
+      
+      // image.src = imageUrl;
+     
+      // if (!(image.complete || (image.width + image.height) > 0)) {        
+      // } else {
+      //   // imageUrl = '/images/noImg.jpg';
+      // }
+
       return`<div class="row news">
     <div class="col-lg-4">
-      <img class="news-img-size" src= ${imageUrl}
-      />
+      <img class="news-img-size" src= ${news.urlToImage} onerror="this.src='images/noImg.jpg';"/>
     </div>    
     <div class="col-lg-8">
       <h2>${news.title}</h2>
       <p>
         ${
           news.description == null || news.description == ""
-            ? "내용없음"
-            : news.description.length > 200
-            ? news.description.substring(0, 200) + "..."
-            : news.description
+          ? "(내용없음)"
+          : news.description.length > 200
+          ? news.description.substring(0, 200) + "..."
+          : news.description
         }
-     </p>
+      </p>
            
       <div>        
-        ${news.source.name == null || news.source.name == ""
-          ? "no source"
-          : news.source.name 
+        ${
+          news.source.name == null || news.source.name == ""
+        ? "no source"
+        : news.source.name 
         } * ${news.publishedAt}
       </div>      
     </div>
@@ -157,6 +157,74 @@ const errorRender = (errorMessage) => {
 
     document.getElementById("news-board").innerHTML = errorHTML;
 }
+
+// 페이지네이션
+const paginationRender = () => {
+  let paginationHTML = ``;
+  // total Result,
+  // page
+  // pageSize
+  // groupSize
+  // totalPages
+  let totalPages = Math.ceil(totalResults / pageSize);
+  // pageGroup
+  let pageGroup = Math.ceil(page / groupSize);
+  // lastPage
+  let lastPage = pageGroup * groupSize;
+  // 마지막 페이지 그룹이 그룹사이즈 보다 작을 경우 lastPage = totalPages
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+
+  // firstPage
+  const firstPage = lastPage - (groupSize - 1) <= 0? 1: lastPage - (groupSize - 1);
+  // first~last
+  
+  if(firstPage >= 6) {
+    paginationHTML = `
+      <li class="page-item" onclick="moveToPage(1)">
+        <a class="page-link" href="#">
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+      </li>
+      <li class="page-item" onclick="moveToPage(${page-1})">
+        <a class="page-link" href="#">
+          <i class="fa-solid fa-chevron-left"></i>
+        </a>
+      </li>`;
+    }    
+  
+  for(let i = firstPage; i<=lastPage; i++) {
+    paginationHTML += `<li class="page-item ${
+      i === page ? "active" : ""
+    }" onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`
+  }
+
+  if (lastPage < totalPages) {
+    paginationHTML += `
+      <li class="page-item" onclick="moveToPage(${page+1})">
+        <a class="page-link" href="#">
+          <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      </li>
+      <li class="page-item" onclick="moveToPage(${totalPages})">
+        <a class="page-link" href="#">
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </li>
+    `;
+  }
+  
+
+  document.querySelector(".pagination").innerHTML = paginationHTML
+
+};
+
+const moveToPage = (pageNum) => {
+  // console.log("moveToPage", pageNum);
+  page = pageNum;
+  getNews();
+};
 
 getLatestNews();
 

@@ -101,6 +101,12 @@
   font-weight: bolder;
 }
 
+.pageMom {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
 @media screen and (max-width:48rem) {
   .menu {
     display: flex;
